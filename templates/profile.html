@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}User Profile{% endblock %}
+{% block content %}
+<h1>User Profile</h1>
+<div>
+    <h2>{{ user.username }}</h2>
+    <p>Email: {{ user.email }}</p>
+    <img src="{{ url_for('static', filename='uploads/images/' ~ user.image) }}" alt="Profile Image" width="200"><br>
+    <!-- Form for updating profile -->
+    <h2>Update Profile</h2>
+    <form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" value="{{ user.username }}"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" value="{{ user.email }}"><br>
+        <label for="profile_image">Profile Image:</label><br>
+        <input type="file" id="profile_image" name="profile_image"><br>
+        <label for="video">Video:</label><br>
+        <input type="file" id="video" name="video"><br>
+        <input type="submit" value="Update">
+    </form>
+</div>
+{% endblock %}

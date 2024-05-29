@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Flask JWT Auth{% endblock %}
+
+{% block content %}
+<h1 class="mt-5">Welcome, {{ username }}</h1>
+{% if username != 'Guest User' %}
+
+
+<!-- Sentiment Analysis Form -->
+<h2>Sentiment Analysis</h2>
+<form id="sentiment-form" method="POST">
+    <label for="text">Enter text for analysis:</label><br>
+    <input type="text" id="text" name="text"><br><br>
+    <input type="button" value="Analyze" onclick="analyzeSentiment()">
+</form>
+
+<!-- Display Sentiment Analysis Results -->
+<div id="sentiment-results" style="margin-top: 20px;">
+
+</div>
+
+<script>
+    function analyzeSentiment() {
+        const text = document.getElementById('text').value;
+        fetch("{{ url_for('analyze') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: text })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('sentiment-results');
+                if (data.error) {
+                    resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>Sentiment Analysis Results:</h3>
+                        <p>Polarity: ${data.polarity}</p>
+                        <p>Subjectivity: ${data.subjectivity}</p>
+                    `;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+{% endif %}
+{% endblock %}
